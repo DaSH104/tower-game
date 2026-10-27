@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>どうぶつタワーバトル</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header id="hud">
+    <div class="label">SCORE</div>
+    <div id="score">0</div>
+    <div id="player-name"></div>
+  </header>
+
+  <main id="stage">
+    <canvas id="game"></canvas>
+    <button id="rotate-btn" class="hidden" aria-label="回転">⟳</button>
+  </main>
+
+  <!-- スタート画面 -->
+  <section id="start-screen" class="overlay">
+    <div class="card">
+      <h1>🐘 どうぶつタワー 🐢</h1>
+      <input id="name-input" type="text" maxlength="12" placeholder="なまえを入力" autocomplete="off">
+      <button id="start-btn" class="primary">スタート</button>
+      <button id="ranking-btn">ランキング</button>
+    </div>
+  </section>
+
+  <!-- ゲームオーバー -->
+  <section id="gameover-screen" class="overlay hidden">
+    <div class="card">
+      <h2>GAME OVER</h2>
+      <p class="final">スコア <span id="final-score">0</span></p>
+      <p id="submit-status"></p>
+      <button id="retry-btn" class="primary">もう一回</button>
+      <button id="ranking-btn2">ランキング</button>
+      <button id="title-btn">タイトルへ</button>
+    </div>
+  </section>
+
+  <!-- ランキング -->
+  <section id="ranking-screen" class="overlay hidden">
+    <div class="card">
+      <h2>🏆 ランキング</h2>
+      <ol id="ranking-list"></ol>
+      <button id="ranking-close">閉じる</button>
+    </div>
+  </section>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
