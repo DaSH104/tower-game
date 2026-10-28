@@ -1,79 +1,110 @@
+/* =====================================================
+   style.css ― 見た目(色・大きさ・配置)
+   ※ コメントを足しただけで、動作は元のコードと同じ
+===================================================== */
+
+/* 全要素に適用。
+   box-sizing: border-box → 枠線や余白(padding)を含めた大きさを width に使う。
+                            これがないと、width 指定より大きく表示されてレイアウトが崩れやすい
+   -webkit-tap-highlight-color: transparent → スマホでタップした時の灰色のハイライトを消す */
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 html, body {
-  margin: 0;
-  height: 100dvh;
-  overflow: hidden;
-  background: #bfe6ff;
+  margin: 0;                /* ブラウザ標準の余白をなくす */
+  height: 100dvh;           /* 画面の高さ全部。dvh はスマホのアドレスバーの出入りを考慮した高さ
+                               (普通の 100vh だと、スマホで下が見切れることがある) */
+  overflow: hidden;         /* はみ出た部分はスクロールさせない(ゲーム中に画面が動かないように) */
+  background: #bfe6ff;      /* 背景色(水色) */
+  /* フォントの優先順位。左から順に、使えるものが採用される */
   font-family: system-ui, -apple-system, "Hiragino Sans", sans-serif;
-  user-select: none;
-  -webkit-user-select: none;
-  overscroll-behavior: none;
+  user-select: none;        /* 文字を選択できなくする(長押しで選択が出るのを防ぐ) */
+  -webkit-user-select: none;/* ↑ iPhone(Safari)用 */
+  overscroll-behavior: none;/* 端まで引っ張った時の「ビヨーン」と引っ張られる動きを無効化 */
 }
 
 body {
-  display: flex;
-  flex-direction: column;
-  max-width: 480px;
-  margin: 0 auto;
-  background: linear-gradient(#bfe6ff, #eaf7ff);
+  display: flex;            /* 中身を並べる方式。上から header → main の縦並びにする */
+  flex-direction: column;   /* 縦に並べる */
+  max-width: 480px;         /* PCで開いても、スマホ幅(480px)より広がらない */
+  margin: 0 auto;           /* 左右の余白を自動にして、PCでは中央に寄せる */
+  background: linear-gradient(#bfe6ff, #eaf7ff); /* 上から下へ、濃い水色→薄い水色 */
 }
 
+/* ----- 上部のスコア表示 ----- */
 #hud {
   height: 84px;
   text-align: center;
   padding-top: 8px;
-  color: #234;
-  flex-shrink: 0;
+  color: #234;              /* 文字色(濃い紺) */
+  flex-shrink: 0;           /* 画面が狭くても、この高さを縮めない */
 }
-#hud .label { font-size: 12px; letter-spacing: 3px; opacity: .6; }
-#score { font-size: 40px; font-weight: 800; line-height: 1.1; }
+#hud .label { font-size: 12px; letter-spacing: 3px; opacity: .6; } /* "SCORE" の小さな文字 */
+#score { font-size: 40px; font-weight: 800; line-height: 1.1; }     /* 大きな数字 */
 #player-name { font-size: 12px; opacity: .6; }
 
-#stage { position: relative; flex: 1; min-height: 0; }
-canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+/* ----- ゲーム画面の領域 ----- */
+#stage {
+  position: relative;       /* 中の回転ボタンを「この領域の右下」基準で置くための指定 */
+  flex: 1;                  /* 上のスコア欄を除いた、残りの高さを全部使う */
+  min-height: 0;            /* flex の中で中身に押されて大きくならないようにする */
+}
+canvas {
+  display: block;           /* canvas の下にできる、わずかな隙間を消す */
+  width: 100%;
+  height: 100%;
+  touch-action: none;       /* canvas の上では、スクロールやズームなどの
+                               ブラウザ標準のタッチ動作を止める(これがないと、
+                               横にスライドした時に画面が動いてしまう) */
+}
 
+/* ----- 回転ボタン(丸いボタン) ----- */
 #rotate-btn {
-  position: absolute;
-  right: 14px;
-  bottom: 14px;
+  position: absolute;       /* #stage の中で、位置を直接指定する */
+  right: 14px;              /* 右から14px */
+  bottom: 14px;             /* 下から14px */
   width: 60px;
   height: 60px;
-  border-radius: 50%;
+  border-radius: 50%;       /* 50% にすると円になる */
   border: none;
   font-size: 30px;
   background: #fff;
-  box-shadow: 0 3px 8px rgba(0,0,0,.25);
+  box-shadow: 0 3px 8px rgba(0,0,0,.25); /* 影(浮いて見える) */
 }
-#rotate-btn:active { transform: scale(.92); }
+#rotate-btn:active { transform: scale(.92); } /* 押している間、少し縮んで押した感じを出す */
 
+/* ----- 重ねて表示する画面(スタート/ゲームオーバー/ランキング共通) ----- */
 .overlay {
-  position: fixed;
-  inset: 0;
+  position: fixed;          /* 画面に固定して、ゲーム画面の上に重ねる */
+  inset: 0;                 /* 上下左右すべて0 = 画面全体に広げる */
   display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(20, 40, 60, .55);
-  z-index: 10;
+  align-items: center;      /* 縦方向の中央 */
+  justify-content: center;  /* 横方向の中央 */
+  background: rgba(20, 40, 60, .55); /* 半透明の暗い背景(後ろのゲームが透けて見える) */
+  z-index: 10;              /* 重なりの順番。数字が大きいほど手前に出る */
 }
+
+/* ----- 白いカード ----- */
 .card {
-  width: min(86vw, 360px);
+  width: min(86vw, 360px);  /* 画面幅の86% か 360px のうち、小さいほう */
   background: #fff;
-  border-radius: 20px;
-  padding: 24px 20px;
+  border-radius: 20px;      /* 角を丸く */
+  padding: 24px 20px;       /* 内側の余白(上下24px、左右20px) */
   text-align: center;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  flex-direction: column;   /* 中身(ボタンなど)を縦に並べる */
+  gap: 12px;                /* 並べた要素どうしの間隔 */
 }
 .card h1 { font-size: 22px; margin: 0 0 4px; }
 .card h2 { margin: 0; }
 .final { font-size: 20px; margin: 0; }
-.final span { font-size: 36px; font-weight: 800; }
+.final span { font-size: 36px; font-weight: 800; } /* ゲームオーバー時の大きなスコア */
 #submit-status { margin: 0; font-size: 13px; min-height: 1.2em; color: #666; }
+/* min-height: メッセージが空でも高さを確保して、表示された時に画面がガタつかないようにする */
 
+/* ----- 入力欄とボタン ----- */
 input {
-  font-size: 16px; /* iOSの自動ズーム防止 */
+  font-size: 16px;          /* 16px未満だと、iPhoneは入力欄をタップした時に画面を勝手に拡大する。
+                               それを防ぐための16px */
   padding: 12px;
   border: 2px solid #cde;
   border-radius: 12px;
@@ -84,31 +115,37 @@ button {
   padding: 12px;
   border: none;
   border-radius: 12px;
-  background: #e6eef5;
+  background: #e6eef5;      /* ふつうのボタンは薄い灰青 */
   color: #234;
   font-weight: 600;
 }
-button.primary { background: #ff8a3d; color: #fff; }
-button:active { opacity: .8; }
+button.primary { background: #ff8a3d; color: #fff; } /* 主なボタン(スタートなど)はオレンジ */
+button:active { opacity: .8; }                       /* 押している間、少し薄くする */
 
+/* ----- ランキングの一覧 ----- */
 #ranking-list {
-  list-style: none;
-  counter-reset: rank;
+  list-style: none;         /* 標準の番号表示を消して、下で自分で作る */
+  counter-reset: rank;      /* 「rank」という名前の数え上げカウンターを0から始める */
   margin: 0;
   padding: 0;
-  max-height: 50dvh;
-  overflow-y: auto;
+  max-height: 50dvh;        /* 画面の半分の高さまで。それ以上は中でスクロールできる */
+  overflow-y: auto;         /* 縦にはみ出したらスクロール */
   text-align: left;
 }
 #ranking-list li {
-  counter-increment: rank;
+  counter-increment: rank;  /* li が1つ出るたびにカウンターを +1 */
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* 名前は左、スコアは右 */
   padding: 8px 6px;
   border-bottom: 1px solid #eee;
 }
+/* li の先頭に「1.」「2.」…を自動で付ける。::before は「要素の直前に追加する飾り」 */
 #ranking-list li::before { content: counter(rank) "."; width: 2em; opacity: .5; }
+/* 名前が長い時は、はみ出した分を「…」で省略する */
 #ranking-list li .n { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 #ranking-list li .s { font-weight: 700; }
 
+/* ----- 非表示用 ----- */
+/* JS が class に "hidden" を付けたり外したりして、画面を出し入れする。
+   !important は、他の指定(.overlay の display:flex など)より優先させる */
 .hidden { display: none !important; }

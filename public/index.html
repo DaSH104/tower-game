@@ -1,55 +1,89 @@
 <!DOCTYPE html>
-<html lang="ja">
+<!-- =====================================================
+  index.html ― 画面の「骨組み」(何がどこにあるか)
+  ・見た目の指定は style.css、動きは script.js が担当
+  ・JSから探しやすいように、主な要素に id が付いている
+  ※ コメントを足しただけで、動作は元のコードと同じ
+===================================================== -->
+<html lang="ja"> <!-- lang: このページは日本語、という宣言 -->
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8"> <!-- 文字コード。これがないと日本語や絵文字が文字化けする -->
+
+  <!-- スマホ用の設定。
+       width=device-width : 画面幅にぴったり合わせる
+       initial-scale=1    : 最初は拡大縮小しない
+       maximum-scale=1, user-scalable=no : ダブルタップなどでの拡大を禁止
+                                           (ゲーム中に画面がズームされないように) -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>どうぶつタワーバトル</title>
+
+  <title>どうぶつタワーバトル</title> <!-- ブラウザのタブに出る名前 -->
+
+  <!-- 見た目を決める CSS ファイルを読み込む -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header id="hud">
+
+  <!-- ========== 上部:スコア表示 ========== -->
+  <header id="hud"> <!-- hud = ゲーム画面の上に出る情報表示(Head-Up Display) -->
     <div class="label">SCORE</div>
-    <div id="score">0</div>
-    <div id="player-name"></div>
+    <div id="score">0</div>          <!-- ここの数字を script.js が書き換える -->
+    <div id="player-name"></div>     <!-- プレイヤー名。script.js が入れる -->
   </header>
 
+  <!-- ========== 中央:ゲーム画面 ========== -->
   <main id="stage">
+    <!-- canvas = 絵を自由に描ける領域。どうぶつや台は全部ここに描く -->
     <canvas id="game"></canvas>
+
+    <!-- 回転ボタン。class="hidden" で最初は隠し、ゲーム開始時に script.js が表示する
+         aria-label は読み上げ用の説明(見た目には出ない) -->
     <button id="rotate-btn" class="hidden" aria-label="回転">⟳</button>
   </main>
 
-  <!-- スタート画面 -->
+  <!-- ========== スタート画面(画面全体に重なるカード) ========== -->
   <section id="start-screen" class="overlay">
     <div class="card">
       <h1>🐘 どうぶつタワー 🐢</h1>
+      <!-- maxlength="12" : 12文字までしか入力できない(サーバー側でも12文字で再チェックしている)
+           autocomplete="off" : 入力履歴の候補を出さない -->
       <input id="name-input" type="text" maxlength="12" placeholder="なまえを入力" autocomplete="off">
       <button id="start-btn" class="primary">スタート</button>
       <button id="ranking-btn">ランキング</button>
     </div>
   </section>
 
-  <!-- ゲームオーバー -->
+  <!-- ========== ゲームオーバー画面(最初は hidden で非表示) ========== -->
   <section id="gameover-screen" class="overlay hidden">
     <div class="card">
       <h2>GAME OVER</h2>
       <p class="final">スコア <span id="final-score">0</span></p>
-      <p id="submit-status"></p>
+      <p id="submit-status"></p> <!-- 「送信中...」「登録したよ」などを script.js が表示 -->
       <button id="retry-btn" class="primary">もう一回</button>
+      <!-- ランキングボタンが2つあるのは、同じ id を2回使えないため。
+           スタート画面用が ranking-btn、ゲームオーバー画面用が ranking-btn2 -->
       <button id="ranking-btn2">ランキング</button>
       <button id="title-btn">タイトルへ</button>
     </div>
   </section>
 
-  <!-- ランキング -->
+  <!-- ========== ランキング画面(最初は非表示) ========== -->
   <section id="ranking-screen" class="overlay hidden">
     <div class="card">
       <h2>🏆 ランキング</h2>
+      <!-- ol = 番号付きリスト。中身(li)は script.js がサーバーから取得した順位で作る
+           番号は CSS 側で自動で付ける -->
       <ol id="ranking-list"></ol>
       <button id="ranking-close">閉じる</button>
     </div>
   </section>
 
+  <!-- ========== JavaScript の読み込み ========== -->
+  <!-- script を body の一番下に置くのは、上の画面の部品が先に読み込まれていないと、
+       JSが「要素が見つからない」となるため -->
+
+  <!-- 物理エンジン Matter.js。重力や衝突の計算をしてくれる(CDN = ネットから直接読み込む) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+  <!-- 自作のゲーム本体。Matter.js を使うので、必ずこの順番(Matter.js が先)で読む -->
   <script src="script.js"></script>
 </body>
 </html>
