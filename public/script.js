@@ -31,7 +31,7 @@ const ANIMALS = [
   { e: "🐷", shape: "circle", k: 1.2 },
   { e: "🐸", shape: "circle", k: 1.0 },
   { e: "🐰", shape: "rect",   k: 1.1 },
-  { e: "🐼", shape: "circle", k: 1.3 },
+  { e: "🐼", shape: "rect", k: 1.3 },
   { e: "🐢", shape: "rect",   k: 1.2 },
   { e: "🦒", shape: "rect",   k: 1.5 },
   { e: "🐘", shape: "rect",   k: 1.6 },
