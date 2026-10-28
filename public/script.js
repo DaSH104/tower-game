@@ -232,7 +232,7 @@ async function endGame() {
   $("gameover-screen").classList.remove("hidden"); // ゲームオーバー画面を表示
   try {
     await postScore(playerName, score); // サーバーにスコアを送り、完了まで待つ
-    $("submit-status").textContent = "スコアを登録したよ";
+    $("submit-status").textContent = "登録完了";
   } catch (err) {
     // 通信失敗(サーバーが起きていない、エラーなど)
     console.error(err); // 原因をブラウザのコンソール(F12)に出す
